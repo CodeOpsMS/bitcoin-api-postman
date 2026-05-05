@@ -1,0 +1,12 @@
+{
+  "name": "bitcoin-api-postman",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Postman collections and CI validation for Bitcoin Core RPC and REST APIs.",
+  "scripts": {
+    "validate": "node scripts/validate-repo.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

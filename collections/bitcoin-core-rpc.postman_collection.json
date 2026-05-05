@@ -1,0 +1,732 @@
+{
+  "info": {
+    "_postman_id": "decef12d-52cc-4e91-bf46-a60b9d32ff27",
+    "name": "Bitcoin Core JSON-RPC",
+    "description": "Phase 1/2 read-only Bitcoin Core JSON-RPC collection. Default target is regtest.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Control",
+      "description": "Control read-only RPC calls.",
+      "item": [
+        {
+          "name": "getrpcinfo",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getrpcinfo\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getrpcinfo`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "uptime",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"uptime\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `uptime`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Blockchain",
+      "description": "Blockchain read-only RPC calls.",
+      "item": [
+        {
+          "name": "getblockchaininfo",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getblockchaininfo\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getblockchaininfo`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getblockcount",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getblockcount\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getblockcount`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getbestblockhash",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getbestblockhash\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getbestblockhash`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getdifficulty",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getdifficulty\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getdifficulty`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getmempoolinfo",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getmempoolinfo\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getmempoolinfo`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getrawmempool",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getrawmempool\",\n  \"params\": [\n    false\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getrawmempool`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Network",
+      "description": "Network read-only RPC calls.",
+      "item": [
+        {
+          "name": "getnetworkinfo",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getnetworkinfo\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getnetworkinfo`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getconnectioncount",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getconnectioncount\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getconnectioncount`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "getpeerinfo",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{rpc_user}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{rpc_password}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"1.0\",\n  \"id\": \"{{request_id}}\",\n  \"method\": \"getpeerinfo\",\n  \"params\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                ""
+              ]
+            },
+            "description": "Read-only Bitcoin Core JSON-RPC call: `getpeerinfo`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json).to.have.property('id');",
+                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
