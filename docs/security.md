@@ -75,3 +75,14 @@ Every PR must be reviewed by the Senior Reviewer before merge. Reviewer should e
 - narrow phase scope
 - CI coverage appropriate to the phase
 - risky RPCs isolated and documented
+
+## Phase 2 Newman usage
+
+Newman runs must target a local or otherwise controlled Bitcoin Core RPC endpoint. The repository only contains placeholder regtest credentials; pass real credentials at runtime with environment overrides or a local untracked Postman environment. Do not commit RPC cookies, real credentials, wallet identifiers, mainnet endpoints, or private keys.
+
+Phase 2 deliberately excludes wallet, send, admin, REST, ZMQ, and Docker/regtest automation to keep the review surface small and read-only.
+
+
+## Newman dev dependency audit posture
+
+Newman is used only as a development/test runner. Known audit findings in its transitive development dependency tree do not affect production dependencies (`npm audit --omit=dev` must stay clean), but they should be visible in PR notes and revisited before any always-on service or production runtime adopts Newman.

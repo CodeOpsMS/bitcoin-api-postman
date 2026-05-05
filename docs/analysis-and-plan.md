@@ -407,3 +407,14 @@ Every phase follows this sequence:
 - [ ] Initial collection contains only read-only RPCs.
 - [ ] Senior Reviewer has reviewed the diff.
 - [ ] PR is created against `main`.
+
+## Phase 2 implementation note
+
+Phase 2 keeps PR scope intentionally small: read-only JSON-RPC only, no wallet, send, admin, REST, ZMQ, or Docker/regtest orchestration. Newman is installed as a dev dependency and wired through `npm run test:newman` so contributors can run the collection against an already-running Bitcoin Core RPC endpoint.
+
+The current collection covers low-risk read-only control, blockchain, and network calls. Each request includes Newman tests for HTTP success and successful JSON-RPC shape (`id`, `result`, and `error: null`).
+
+
+## Phase 2 dependency gate
+
+Phase 2 CI must install dependencies with `npm ci --ignore-scripts`, verify Newman CLI wiring, and run `npm audit --omit=dev`. Full `npm audit` findings from Newman transitive dev dependencies are tracked as a known development-only risk, not a production dependency risk.

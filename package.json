@@ -2,11 +2,17 @@
   "name": "bitcoin-api-postman",
   "version": "0.1.0",
   "private": true,
-  "description": "Postman collections and CI validation for Bitcoin Core RPC and REST APIs.",
+  "description": "Postman collections and Newman validation for read-only Bitcoin Core JSON-RPC APIs.",
   "scripts": {
-    "validate": "node scripts/validate-repo.mjs"
+    "validate": "node scripts/validate-repo.mjs",
+    "test": "npm run validate",
+    "test:newman": "newman run collections/bitcoin-core-rpc.postman_collection.json -e environments/regtest.postman_environment.json --bail --timeout-request 10000",
+    "newman:version": "newman --version"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "newman": "^6.2.2"
   }
 }
