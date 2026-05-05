@@ -326,22 +326,34 @@ Senior Reviewer gate:
 
 Goal: add Bitcoin Core REST only after RPC/regtest foundation is stable.
 
-Planned endpoints:
+Implementation source:
+
+- Current Bitcoin Core REST interface documentation: <https://github.com/bitcoin/bitcoin/blob/master/doc/REST-interface.md>
+
+Planned endpoints for this phase:
 
 - `/rest/chaininfo.json`
+- `/rest/deploymentinfo.json`
 - `/rest/mempool/info.json`
-- `/rest/mempool/contents.json`
 - `/rest/blockhashbyheight/<height>.json`
-- `/rest/block/<hash>.json`
 - `/rest/block/notxdetails/<hash>.json`
 - `/rest/headers/<hash>.json?count=<count>`
-- `/rest/tx/<txid>.json`
+
+Excluded from Phase 4:
+
+- Wallet workflows.
+- Transaction-specific REST endpoint `/rest/tx/<txid>.*`.
+- UTXO/undo transaction-output endpoints `/rest/getutxos/...` and `/rest/spenttxouts/<blockhash>.*`.
+- Transaction-heavy full block endpoint `/rest/block/<blockhash>.*`; use `/rest/block/notxdetails/<blockhash>.json` instead.
+- Mempool transaction-entry listing `/rest/mempool/contents.json`.
+- Binary and hex response variants.
 
 Checks:
 
-- REST enabled in `bitcoin.conf`.
-- JSON endpoints validated by Newman.
-- REST risks documented.
+- REST enabled with `-rest=1`.
+- REST uses the same local regtest HTTP listener as RPC (`127.0.0.1:18443`).
+- JSON endpoints validated structurally by the repository validator and later by Newman when the integration node is available.
+- REST risks documented, including file-descriptor exhaustion from high connection counts and browser/XSS privacy leakage.
 
 Senior Reviewer gate:
 

@@ -1,12 +1,12 @@
 # Bitcoin Core API Postman
 
-A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC interface, built with a `regtest`-first workflow and CI validation.
+A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC and REST interfaces, built with a `regtest`-first workflow and CI validation.
 
-> Status: Phase 3 regtest integration. The repository contains a safe read-only JSON-RPC collection, Newman wiring, and a disposable Dockerized Bitcoin Core regtest node for read-only RPC readiness checks. Wallet and send-money workflows stay out of the default path.
+> Status: Phase 4 REST collection. The repository contains safe read-only JSON-RPC/Newman validation, Dockerized regtest readiness checks, and a separate JSON-only REST collection that defaults to local regtest.
 
 ## Goals
 
-- Provide maintainable Postman collections for Bitcoin Core JSON-RPC. REST is intentionally out of scope until a later phase.
+- Provide maintainable Postman collections for Bitcoin Core JSON-RPC and REST.
 - Keep the default workflow safe by using `regtest` first.
 - Validate collections and environments in CI before adding risky or advanced requests.
 - Document ZMQ separately because it is a Pub/Sub notification interface, not an HTTP API.
@@ -17,6 +17,7 @@ A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC in
 ```text
 collections/      Postman collections
   bitcoin-core-rpc.postman_collection.json
+  bitcoin-core-rest.postman_collection.json
 environments/    Postman environment templates
   regtest.postman_environment.json
 docs/            Analysis, security notes, phase plan, API notes
@@ -64,6 +65,9 @@ The current pipeline validates:
 - per-request Newman tests for HTTP 200, matching JSON-RPC id, and `error: null`
 - Docker regtest integration files and read-only helper scripts
 - Docker Compose config and read-only regtest smoke checks in CI
+- separate JSON-only REST collection shape
+- REST GET-only URLs under `/rest/` using local regtest defaults
+- REST wallet/transaction-specific endpoint exclusions for Phase 4
 
 ## Newman read-only RPC run
 
@@ -82,6 +86,12 @@ npm run test:newman -- \
 
 Keep credentials local. Do not commit real RPC users, passwords, cookie files, wallet names, or mainnet endpoints.
 
+## REST collection
+
+The REST collection is separate from JSON-RPC and uses local regtest defaults. REST must be enabled in Bitcoin Core with `-rest=1` or the matching `bitcoin.conf` setting.
+
+Current Phase 4 REST scope is JSON-only and excludes wallet/transaction-adjacent endpoints such as `/rest/tx/...`, `/rest/getutxos/...`, `/rest/spenttxouts/...`, full block transaction details, `/rest/mempool/contents.json`, and `.bin`/`.hex` variants.
+
 ## Development rules
 
 1. Work happens on branches, never directly on `main`.
@@ -95,6 +105,10 @@ Keep credentials local. Do not commit real RPC users, passwords, cookie files, w
 Primary planning source:
 
 - Bitcoin developer RPC reference: <https://developer.bitcoin.org/reference/rpc/>
+
+REST implementation source:
+
+- Bitcoin Core REST interface documentation: <https://github.com/bitcoin/bitcoin/blob/master/doc/REST-interface.md>
 
 Additional implementation references will be used phase-by-phase, especially current Bitcoin Core documentation for REST, ZMQ, and version-specific RPC changes.
 

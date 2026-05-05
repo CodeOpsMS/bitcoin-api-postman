@@ -60,7 +60,21 @@ Rules:
 
 ## REST notes
 
-Bitcoin Core REST runs on the same HTTP server/port as RPC and requires `-rest=1`. REST should be implemented as a separate collection. Avoid high parallelism against REST endpoints.
+Bitcoin Core REST runs on the same HTTP server/port as RPC and requires `-rest=1`. REST is implemented as a separate collection and must keep local/regtest defaults.
+
+Phase 4 REST rules:
+
+- Use JSON endpoints only.
+- Use `GET` only.
+- Keep REST URLs under `/rest/` on `127.0.0.1:18443` by default.
+- Do not add wallet workflows, transaction-specific REST endpoints, full block transaction details, or mempool transaction-entry listings in Phase 4.
+- Avoid high parallelism against REST endpoints.
+
+Known REST-specific risks from Bitcoin Core documentation:
+
+- Too many simultaneous REST connections can exhaust file descriptors and may crash the node.
+- A browser running on the same host as a REST-enabled node can leak node tx/block data through prepared local REST URL requests.
+- Full block REST responses can be large and contain embedded transaction data; they are excluded from Phase 4 in favor of `notxdetails`.
 
 ## ZMQ notes
 
