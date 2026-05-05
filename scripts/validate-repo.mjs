@@ -7,6 +7,7 @@ const requiredFiles = [
   'package-lock.json',
   'docs/analysis-and-plan.md',
   'docs/security.md',
+  'docs/phase-5-wallet-transactions-regtest.md',
   'collections/bitcoin-core-rpc.postman_collection.json',
   'collections/bitcoin-core-rest.postman_collection.json',
   'environments/regtest.postman_environment.json',
@@ -46,6 +47,24 @@ const forbiddenRestPathPatterns = [
   /\/rest\/mempool\/contents\.json/i,
   /\.(?:bin|hex)(?:$|[?])/i
 ];
+
+const phase5PreparationForbiddenRpcMethods = new Set([
+  'dumpprivkey',
+  'dumpwallet',
+  'importprivkey',
+  'importwallet',
+  'walletpassphrase',
+  'walletpassphrasechange',
+  'encryptwallet',
+  'send',
+  'sendmany',
+  'sendtoaddress',
+  'sendrawtransaction',
+  'submitpackage',
+  'importdescriptors',
+  'importmulti',
+  'sendall'
+]);
 
 const forbiddenSecretPatterns = [
   /rpcpassword\s*=/i,
@@ -145,7 +164,10 @@ function validateRpcRequest(item, requestPath) {
     errors.push(`${requestPath}: RPC body id must use {{request_id}}`);
   }
   if (!allowedReadOnlyRpcMethods.has(rpcBody.method)) {
-    errors.push(`${requestPath}: RPC method is not in the Phase 1 read-only allowlist: ${rpcBody.method}`);
+    errors.push(`${requestPath}: RPC method is not in the current executable allowlist: ${rpcBody.method}`);
+  }
+  if (phase5PreparationForbiddenRpcMethods.has(rpcBody.method)) {
+    errors.push(`${requestPath}: RPC method is prohibited during Phase 5 preparation: ${rpcBody.method}`);
   }
   if (!Array.isArray(rpcBody.params)) {
     errors.push(`${requestPath}: RPC params must be an array`);
@@ -254,6 +276,22 @@ function validateRestRequest(item, requestPath) {
   }
 }
 
+function validatePhase5Skeleton(collection) {
+  const phase5Folder = collection.item?.find((item) => item.name === 'Wallet and Transactions - Phase 5 REGTEST ONLY');
+  if (!phase5Folder) {
+    errors.push('RPC collection missing Phase 5 regtest-only wallet/transaction skeleton folder');
+    return;
+  }
+  if (!Array.isArray(phase5Folder.item)) {
+    errors.push('Phase 5 skeleton folder must be a folder with an item array');
+  } else if (phase5Folder.item.length !== 0) {
+    errors.push('Phase 5 preparation skeleton must stay empty until executable wallet/transaction workflows are reviewed in a later phase');
+  }
+  if (!/regtest/i.test(phase5Folder.description ?? '') || !/no executable requests yet/i.test(phase5Folder.description ?? '')) {
+    errors.push('Phase 5 skeleton folder description must clearly state regtest-only and preparation-only status');
+  }
+}
+
 function validateNoObviousSecrets() {
   for (const file of filesToSecretScan) {
     const full = path.join(root, file);
@@ -289,6 +327,7 @@ if (collection) {
   for (const request of requests) {
     validateRpcRequest(request.item, request.path);
   }
+  validatePhase5Skeleton(collection);
 }
 
 
@@ -332,6 +371,12 @@ if (environment) {
     }
     if (names.get('rpc_password')?.type !== 'secret') {
       errors.push('Regtest environment rpc_password must be marked as type "secret"');
+    }
+    if (/main/i.test(environment.name ?? '')) {
+      errors.push('Regtest environment name must not look like mainnet');
+    }
+    if (names.get('rpc_port')?.value === '8332') {
+      errors.push('Regtest environment must not default to the mainnet RPC port 8332');
     }
   }
 }

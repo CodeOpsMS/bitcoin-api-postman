@@ -14,6 +14,22 @@ Bitcoin Core JSON-RPC can control node behavior, wallet state, private keys, and
 
 Postman environments may contain local placeholder credentials for regtest only. Real credentials belong in local Postman secrets or another local secret manager, never in Git.
 
+## Phase 5 wallet/transaction preparation gate
+
+Phase 5 preparation is limited to documentation, validation gates, and a non-executable collection skeleton for deterministic `regtest` workflows.
+
+Hard rules for this phase:
+
+- No mainnet, signet, testnet, or production wallet operations.
+- No executable private-key dump/import, wallet dump/import, wallet passphrase, or wallet encryption requests.
+- No executable send/broadcast request until a later Senior Reviewer-approved change.
+- Any future broadcast workflow must be regtest-only, disposable, and isolated in a folder named `DESTRUCTIVE REGTEST ONLY`.
+- Future wallet names, addresses, transaction IDs, and UTXOs must be generated from local CI/regtest state, never copied from real wallets.
+
+Additional methods that must remain blocked until an explicit future safety review: `sendall`, `importmulti`, `importdescriptors`, and `submitpackage`.
+
+See `docs/phase-5-wallet-transactions-regtest.md` for the detailed staging checklist.
+
 ## Risk classes
 
 ### Low risk / read-only
@@ -53,10 +69,10 @@ Examples:
 
 Rules:
 
-- Add only after the basic CI pipeline is stable.
+- Add only after the basic CI pipeline is stable and Senior Reviewer approves the narrow scope.
 - Keep in clearly marked folders.
-- Test only against regtest by default.
-- Document intent, preconditions, and rollback/recovery notes.
+- Test only against disposable regtest data by default.
+- Document intent, preconditions, rollback/recovery notes, and teardown/reset steps.
 
 ## REST notes
 
@@ -95,7 +111,6 @@ Every PR must be reviewed by the Senior Reviewer before merge. Reviewer should e
 Newman runs must target a local or otherwise controlled Bitcoin Core RPC endpoint. The repository only contains placeholder regtest credentials; pass real credentials at runtime with environment overrides or a local untracked Postman environment. Do not commit RPC cookies, real credentials, wallet identifiers, mainnet endpoints, or private keys.
 
 Phase 2 deliberately excludes wallet, send, admin, REST, ZMQ, and Docker/regtest automation to keep the review surface small and read-only.
-
 
 ## Newman dev dependency audit posture
 

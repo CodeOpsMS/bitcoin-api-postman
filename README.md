@@ -2,7 +2,7 @@
 
 A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC and REST interfaces, built with a `regtest`-first workflow and CI validation.
 
-> Status: Phase 4 REST collection. The repository contains safe read-only JSON-RPC/Newman validation, Dockerized regtest readiness checks, and a separate JSON-only REST collection that defaults to local regtest.
+> Status: Phase 5 preparation branch. The repository contains safe read-only JSON-RPC/Newman validation, Dockerized regtest readiness checks, a conservative REST collection, and documented/gated wallet-transaction preparation for deterministic `regtest` only. No executable wallet mutation, private-key, or mainnet send workflow is added here.
 
 ## Goals
 
@@ -21,6 +21,7 @@ collections/      Postman collections
 environments/    Postman environment templates
   regtest.postman_environment.json
 docs/            Analysis, security notes, phase plan, API notes
+  phase-5-wallet-transactions-regtest.md
 scripts/         Local validation and regtest readiness helpers
 docker/          Bitcoin Core regtest configuration
 .github/         GitHub Actions workflows
@@ -54,7 +55,9 @@ The current pipeline validates:
 
 - JSON syntax for collections and environments
 - Postman Collection v2.1 schema marker and request presence
-- Phase 1 read-only RPC method allowlist
+- Current executable RPC method allowlist
+- Phase 5 regtest-only wallet/transaction skeleton presence
+- Phase 5 preparation ban on private-key and send/broadcast methods
 - raw JSON-RPC request bodies
 - POST-only RPC requests
 - basic auth variables via `{{rpc_user}}` / `{{rpc_password}}`
@@ -92,6 +95,12 @@ The REST collection is separate from JSON-RPC and uses local regtest defaults. R
 
 Current Phase 4 REST scope is JSON-only and excludes wallet/transaction-adjacent endpoints such as `/rest/tx/...`, `/rest/getutxos/...`, `/rest/spenttxouts/...`, full block transaction details, `/rest/mempool/contents.json`, and `.bin`/`.hex` variants.
 
+## Phase 5 wallet/transaction preparation
+
+Phase 5 only prepares documentation, validator gates, and an empty `Wallet and Transactions - Phase 5 REGTEST ONLY` collection skeleton. Executable wallet mutation, private-key, passphrase, send, or broadcast requests remain blocked until a later reviewed implementation phase.
+
+See [docs/phase-5-wallet-transactions-regtest.md](docs/phase-5-wallet-transactions-regtest.md).
+
 ## Development rules
 
 1. Work happens on branches, never directly on `main`.
@@ -99,6 +108,7 @@ Current Phase 4 REST scope is JSON-only and excludes wallet/transaction-adjacent
 3. CI must be green before expanding scope.
 4. A Senior Reviewer must review every PR.
 5. Mainnet credentials and private keys must never be committed.
+6. Wallet and transaction workflows must remain disposable-regtest only until explicitly reviewed.
 
 ## Sources
 
