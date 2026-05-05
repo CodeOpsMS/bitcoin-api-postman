@@ -361,11 +361,18 @@ Senior Reviewer gate:
 
 ### Phase 5 — Wallet and transaction workflows
 
-Goal: add money-moving workflows only in deterministic regtest.
+Goal: add wallet and money-moving workflows only in deterministic regtest.
 
-Deliverables:
+Current preparation branch scope:
 
-- Wallet creation/loading workflow.
+- Document strict regtest-only wallet/transaction boundaries.
+- Add validation gates that keep executable requests on the conservative allowlist.
+- Add a non-executable collection skeleton folder named `Wallet and Transactions - Phase 5 REGTEST ONLY`.
+- Keep private-key dump/import, wallet dump/import, wallet passphrase/encryption, and send/broadcast methods out of executable requests.
+
+Future deliverables after Senior Reviewer approval:
+
+- Wallet creation/loading workflow for disposable regtest wallets.
 - Address generation.
 - Mining to wallet address.
 - Balance checks.
@@ -377,10 +384,11 @@ Checks:
 - All wallet/send operations run only against regtest CI data.
 - Destructive or sensitive requests are in clearly marked folders.
 - No mainnet defaults.
+- Private-key material is never dumped, imported, pasted, or committed.
 
 Senior Reviewer gate:
 
-- Confirms private-key and send workflows are guarded and documented.
+- Confirms private-key and send workflows are guarded and documented before any executable wallet/send request is added.
 
 ### Phase 6 — Advanced/special topics
 

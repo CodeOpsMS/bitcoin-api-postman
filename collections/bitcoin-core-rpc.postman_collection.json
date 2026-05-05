@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "decef12d-52cc-4e91-bf46-a60b9d32ff27",
     "name": "Bitcoin Core JSON-RPC",
-    "description": "Phase 2 read-only Bitcoin Core JSON-RPC collection. Default target is regtest and Newman can run against an existing RPC endpoint.",
+    "description": "Read-only Bitcoin Core JSON-RPC collection with a Phase 5 regtest-only wallet/transaction preparation skeleton. Default target is regtest and Newman can run against an existing RPC endpoint.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -771,6 +771,11 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Wallet and Transactions - Phase 5 REGTEST ONLY",
+      "description": "PREPARATION-ONLY skeleton for deterministic local regtest wallet and transaction workflows.\n\nThis folder intentionally contains no executable requests yet. Future requests must remain regtest-only, use disposable wallets, and follow docs/phase-5-wallet-transactions-regtest.md.\n\nDo not add mainnet sends, production wallet operations, private-key dump/import requests, wallet dumps/imports, or passphrase/encryption requests here.\n\nAny future broadcast request must live under a clearly named DESTRUCTIVE REGTEST ONLY subfolder and require Senior Reviewer approval.",
+      "item": []
     }
   ]
 }
