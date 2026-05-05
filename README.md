@@ -1,12 +1,12 @@
 # Bitcoin Core API Postman
 
-A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC and REST interfaces, built with a `regtest`-first workflow and CI validation.
+A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC interface, built with a `regtest`-first workflow and CI validation.
 
-> Status: Phase 1 foundation. The repository structure, source analysis, safety model, and validation pipeline are being established before advanced Bitcoin workflows are added.
+> Status: Phase 2 read-only Newman. The repository now contains a small, safe JSON-RPC collection and local Newman wiring for running it against an existing Bitcoin Core RPC endpoint.
 
 ## Goals
 
-- Provide maintainable Postman collections for Bitcoin Core JSON-RPC and REST.
+- Provide maintainable Postman collections for Bitcoin Core JSON-RPC. REST is intentionally out of scope until a later phase.
 - Keep the default workflow safe by using `regtest` first.
 - Validate collections and environments in CI before adding risky or advanced requests.
 - Document ZMQ separately because it is a Pub/Sub notification interface, not an HTTP API.
@@ -26,6 +26,14 @@ scripts/         Local validation and future test helpers
 
 ## Current validation
 
+Install dependencies first:
+
+```bash
+npm install
+```
+
+Run static repository validation:
+
 ```bash
 npm run validate
 ```
@@ -41,6 +49,26 @@ The current pipeline validates:
 - regtest-first environment defaults
 - required repository files
 - no obvious hardcoded RPC credentials
+- Newman dependency and `test:newman` script wiring
+- per-request Newman tests for HTTP 200, matching JSON-RPC id, and `error: null`
+
+
+## Newman read-only RPC run
+
+`test:newman` runs the collection against the configured environment. It does not start Bitcoin Core and does not provision Docker/regtest; Phase 3 will cover reproducible regtest infrastructure.
+
+Default target: `http://127.0.0.1:18443/` with the placeholder `bitcoin` / `bitcoin` RPC credentials from `environments/regtest.postman_environment.json`. Override values at runtime for an already-running `bitcoind`:
+
+```bash
+npm run test:newman -- \
+  --env-var protocol=http \
+  --env-var host=127.0.0.1 \
+  --env-var rpc_port=18443 \
+  --env-var rpc_user=<your-rpc-user> \
+  --env-var rpc_password=<your-rpc-password>
+```
+
+Keep credentials local. Do not commit real RPC users, passwords, cookie files, wallet names, or mainnet endpoints.
 
 ## Development rules
 
@@ -57,3 +85,8 @@ Primary planning source:
 - Bitcoin developer RPC reference: <https://developer.bitcoin.org/reference/rpc/>
 
 Additional implementation references will be used phase-by-phase, especially current Bitcoin Core documentation for REST, ZMQ, and version-specific RPC changes.
+
+
+## Known Phase 2 dev dependency audit note
+
+Phase 2 uses Newman as a development-only Postman runner. `npm audit` currently reports vulnerabilities in Newman transitive development dependencies. This is accepted temporarily for Phase 2 because `npm audit --omit=dev` is clean, Newman is not a production runtime dependency, and CI verifies the production audit separately. The full dev audit should be revisited when choosing a long-term collection runner.

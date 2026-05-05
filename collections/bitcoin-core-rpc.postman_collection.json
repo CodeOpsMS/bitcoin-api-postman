@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "decef12d-52cc-4e91-bf46-a60b9d32ff27",
     "name": "Bitcoin Core JSON-RPC",
-    "description": "Phase 1/2 read-only Bitcoin Core JSON-RPC collection. Default target is regtest.",
+    "description": "Phase 2 read-only Bitcoin Core JSON-RPC collection. Default target is regtest and Newman can run against an existing RPC endpoint.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -64,10 +64,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -128,10 +132,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -198,10 +206,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -262,10 +274,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -326,10 +342,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -390,10 +410,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -454,10 +478,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -518,10 +546,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -588,10 +620,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -652,10 +688,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }
@@ -716,10 +756,14 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
-                  "pm.test('Response is JSON-RPC shaped', function () {",
+                  "pm.test('Response is JSON', function () { pm.response.to.be.json; });",
+                  "pm.test('Response is successful JSON-RPC', function () {",
                   "  const json = pm.response.json();",
-                  "  pm.expect(json).to.have.property('id');",
-                  "  pm.expect(json).to.satisfy((body) => Object.prototype.hasOwnProperty.call(body, 'result') || Object.prototype.hasOwnProperty.call(body, 'error'));",
+                  "  pm.expect(json).to.be.an('object');",
+                  "  pm.expect(json).to.have.property('id', pm.environment.get('request_id'));",
+                  "  pm.expect(json).to.have.property('error');",
+                  "  pm.expect(json.error).to.eql(null);",
+                  "  pm.expect(json).to.have.property('result');",
                   "});"
                 ]
               }

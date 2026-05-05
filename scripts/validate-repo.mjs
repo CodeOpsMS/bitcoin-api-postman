@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const requiredFiles = [
   'README.md',
+  'package-lock.json',
   'docs/analysis-and-plan.md',
   'docs/security.md',
   'collections/bitcoin-core-rpc.postman_collection.json',
@@ -133,6 +134,33 @@ function validateRpcRequest(item, requestPath) {
   if (!Array.isArray(rpcBody.params)) {
     errors.push(`${requestPath}: RPC params must be an array`);
   }
+
+  const testEvents = item.event?.filter((event) => event.listen === 'test') ?? [];
+  const testScript = testEvents.flatMap((event) => event.script?.exec ?? []).join('\n');
+  if (!testScript.includes('pm.response.to.have.status(200)')) {
+    errors.push(`${requestPath}: Newman test must assert HTTP 200`);
+  }
+  if (!testScript.includes("json.error).to.eql(null)")) {
+    errors.push(`${requestPath}: Newman test must assert JSON-RPC error is null`);
+  }
+  if (!testScript.includes("pm.environment.get('request_id')")) {
+    errors.push(`${requestPath}: Newman test must assert response id matches {{request_id}}`);
+  }
+}
+
+function validatePackage() {
+  const packageJson = readJson('package.json');
+  if (!packageJson) return;
+
+  if (packageJson.devDependencies?.newman === undefined) {
+    errors.push('package.json: newman must be listed as a devDependency');
+  }
+  if (packageJson.scripts?.validate !== 'node scripts/validate-repo.mjs') {
+    errors.push('package.json: validate script must run scripts/validate-repo.mjs');
+  }
+  if (!packageJson.scripts?.['test:newman']?.includes('newman run collections/bitcoin-core-rpc.postman_collection.json')) {
+    errors.push('package.json: test:newman script must run the RPC collection with Newman');
+  }
 }
 
 function validateNoObviousSecrets() {
@@ -199,6 +227,7 @@ if (environment) {
 }
 
 validateNoObviousSecrets();
+validatePackage();
 
 if (errors.length > 0) {
   console.error('Validation failed:');
