@@ -2,7 +2,7 @@
 
 A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC and REST interfaces, built with a `regtest`-first workflow and CI validation.
 
-> Status: Phase 5 preparation branch. The repository contains safe read-only JSON-RPC/Newman validation, Dockerized regtest readiness checks, a conservative REST collection, and documented/gated wallet-transaction preparation for deterministic `regtest` only. No executable wallet mutation, private-key, or mainnet send workflow is added here.
+> Status: Phase 6 planning branch. The repository contains read-only JSON-RPC/Newman validation, Dockerized regtest readiness checks, a conservative REST collection, gated wallet-transaction preparation, and docs-first advanced ZMQ/PSBT/descriptor/raw transaction roadmap material. No executable mainnet or risky wallet workflow is added here.
 
 ## Goals
 
@@ -22,6 +22,8 @@ environments/    Postman environment templates
   regtest.postman_environment.json
 docs/            Analysis, security notes, phase plan, API notes
   phase-5-wallet-transactions-regtest.md
+  advanced-zmq.md       ZMQ topic explanation, security notes, subscriber sketch
+  phase-6-roadmap.md    PSBT, descriptor, raw transaction, and ZMQ roadmap
 scripts/         Local validation and regtest readiness helpers
 docker/          Bitcoin Core regtest configuration
 .github/         GitHub Actions workflows
@@ -71,6 +73,7 @@ The current pipeline validates:
 - separate JSON-only REST collection shape
 - REST GET-only URLs under `/rest/` using local regtest defaults
 - REST wallet/transaction-specific endpoint exclusions for Phase 4
+- docs-only advanced/ZMQ planning files stay included in validation and secret scanning
 
 ## Newman read-only RPC run
 
@@ -100,6 +103,17 @@ Current Phase 4 REST scope is JSON-only and excludes wallet/transaction-adjacent
 Phase 5 only prepares documentation, validator gates, and an empty `Wallet and Transactions - Phase 5 REGTEST ONLY` collection skeleton. Executable wallet mutation, private-key, passphrase, send, or broadcast requests remain blocked until a later reviewed implementation phase.
 
 See [docs/phase-5-wallet-transactions-regtest.md](docs/phase-5-wallet-transactions-regtest.md).
+
+## Advanced topics
+
+Phase 6 advanced material is intentionally docs-first:
+
+- ZMQ is documented separately because it is unauthenticated Pub/Sub, not an HTTP API.
+- Subscriber examples are sketches for local `regtest` and loopback endpoints only.
+- PSBT, descriptor, and raw transaction work remains a roadmap until isolated CI and review gates exist.
+- No executable mainnet workflows are added by this branch.
+
+See [docs/advanced-zmq.md](docs/advanced-zmq.md) and [docs/phase-6-roadmap.md](docs/phase-6-roadmap.md).
 
 ## Development rules
 

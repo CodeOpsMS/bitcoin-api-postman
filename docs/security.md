@@ -96,6 +96,10 @@ Known REST-specific risks from Bitcoin Core documentation:
 
 ZMQ is unauthenticated Pub/Sub. It is not an HTTP API and does not belong in Postman collections. It should be documented separately and exposed only to trusted networks.
 
+Phase 6 documentation covers `rawtx`, `hashtx`, `rawblock`, `hashblock`, and `sequence` notifications. Safe defaults for future examples are local `regtest` and loopback endpoints only. ZMQ can leak transaction timing, transaction identifiers, block timing, and local node activity, so it must not be exposed as a public service.
+
+See `docs/advanced-zmq.md` for the topic overview, subscriber sketch, and future implementation checklist.
+
 ## Reviewer requirement
 
 Every PR must be reviewed by the Senior Reviewer before merge. Reviewer should explicitly check:

@@ -20,6 +20,8 @@ const requiredFiles = [
 ];
 const filesToSecretScan = [
   ...requiredFiles,
+  'docs/advanced-zmq.md',
+  'docs/phase-6-roadmap.md',
   'package.json',
   'scripts/validate-repo.mjs',
   '.github/workflows/validate.yml'
