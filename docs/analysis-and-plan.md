@@ -402,9 +402,17 @@ Only after Phases 1-5 are stable:
 - ZMQ documentation and example subscriber.
 - Optional OpenAPI/Bruno/Insomnia exports.
 
+Current preparation branch scope:
+
+- Document ZMQ as unauthenticated Pub/Sub, separate from Postman HTTP collections.
+- Explain ZMQ topics `rawtx`, `hashtx`, `rawblock`, `hashblock`, and `sequence`.
+- Add a local regtest subscriber sketch that logs metadata only.
+- Add a PSBT, descriptor, and raw transaction roadmap without enabling risky executable workflows.
+
 Senior Reviewer gate:
 
 - Confirms each advanced topic has a narrow PR, CI coverage, and explicit safety notes.
+- Confirms docs-only preparation does not introduce mainnet broadcast, private-key, or wallet-mutation workflows.
 
 ## Review workflow
 
