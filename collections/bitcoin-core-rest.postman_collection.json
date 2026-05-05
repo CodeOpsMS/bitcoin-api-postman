@@ -1,0 +1,291 @@
+{
+  "info": {
+    "_postman_id": "3d2eac44-bb2a-4f8f-8b1b-phase4rest01",
+    "name": "Bitcoin Core REST",
+    "description": "Phase 4 Bitcoin Core REST collection. JSON-only, read-only endpoints for local regtest. Requires bitcoind -rest=1 and uses the same HTTP port as JSON-RPC.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Blockchain",
+      "description": "Read-only REST endpoints for chain state. JSON format only.",
+      "item": [
+        {
+          "name": "chaininfo",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/rest/chaininfo.json",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                "rest",
+                "chaininfo.json"
+              ]
+            },
+            "description": "Returns blockchain processing state. Mirrors getblockchaininfo. Requires -rest=1."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "  pm.expect(function () { pm.response.json(); }).not.to.throw();",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "deploymentinfo",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/rest/deploymentinfo.json",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                "rest",
+                "deploymentinfo.json"
+              ]
+            },
+            "description": "Returns deployment state at the current chain tip. Mirrors getdeploymentinfo. Requires -rest=1."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "  pm.expect(function () { pm.response.json(); }).not.to.throw();",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "blockhashbyheight",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/rest/blockhashbyheight/{{rest_block_height}}.json",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                "rest",
+                "blockhashbyheight",
+                "{{rest_block_height}}.json"
+              ]
+            },
+            "description": "Returns the block hash at {{rest_block_height}} in the active chain. Use regtest defaults only."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "  pm.expect(function () { pm.response.json(); }).not.to.throw();",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "headers",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/rest/headers/{{rest_block_hash}}.json?count={{rest_headers_count}}",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                "rest",
+                "headers",
+                "{{rest_block_hash}}.json"
+              ],
+              "query": [
+                {
+                  "key": "count",
+                  "value": "{{rest_headers_count}}"
+                }
+              ]
+            },
+            "description": "Returns block headers upward from {{rest_block_hash}}."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "  pm.expect(function () { pm.response.json(); }).not.to.throw();",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "block notxdetails",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/rest/block/notxdetails/{{rest_block_hash}}.json",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                "rest",
+                "block",
+                "notxdetails",
+                "{{rest_block_hash}}.json"
+              ]
+            },
+            "description": "Returns a block without full transaction details in JSON. Prefer this over full block details for the Phase 4 scope."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "  pm.expect(function () { pm.response.json(); }).not.to.throw();",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mempool",
+      "description": "Read-only mempool REST endpoints. JSON format only.",
+      "item": [
+        {
+          "name": "mempool info",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{protocol}}://{{host}}:{{rpc_port}}/rest/mempool/info.json",
+              "protocol": "{{protocol}}",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{rpc_port}}",
+              "path": [
+                "rest",
+                "mempool",
+                "info.json"
+              ]
+            },
+            "description": "Returns mempool state. Mirrors getmempoolinfo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Response is JSON', function () {",
+                  "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "  pm.expect(function () { pm.response.json(); }).not.to.throw();",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -8,10 +8,12 @@ const requiredFiles = [
   'docs/analysis-and-plan.md',
   'docs/security.md',
   'collections/bitcoin-core-rpc.postman_collection.json',
+  'collections/bitcoin-core-rest.postman_collection.json',
   'environments/regtest.postman_environment.json',
   'docker-compose.yml',
   'docker/bitcoin.conf',
   'docs/regtest-docker.md',
+  'docs/rest-api.md',
   'scripts/wait-for-bitcoind.sh',
   'scripts/bootstrap-regtest-readonly.sh'
 ];
@@ -35,6 +37,15 @@ const allowedReadOnlyRpcMethods = new Set([
   'getrpcinfo',
   'uptime'
 ]);
+
+const forbiddenRestPathPatterns = [
+  /\/rest\/tx\//i,
+  /\/rest\/getutxos\//i,
+  /\/rest\/spenttxouts\//i,
+  /\/rest\/block\/(?!notxdetails\/)/i,
+  /\/rest\/mempool\/contents\.json/i,
+  /\.(?:bin|hex)(?:$|[?])/i
+];
 
 const forbiddenSecretPatterns = [
   /rpcpassword\s*=/i,
@@ -205,6 +216,44 @@ function validatePhase3RegtestIntegration() {
   }
 }
 
+
+function validateRestRequest(item, requestPath) {
+  const request = item.request;
+
+  if (request.method !== 'GET') {
+    errors.push(`${requestPath}: REST request method must be GET`);
+  }
+
+  if (request.auth && request.auth.type !== 'noauth') {
+    errors.push(`${requestPath}: REST request must not use RPC basic auth`);
+  }
+
+  if (request.body) {
+    errors.push(`${requestPath}: REST GET request must not define a body`);
+  }
+
+  const rawUrl = request.url?.raw;
+  if (typeof rawUrl !== 'string') {
+    errors.push(`${requestPath}: REST request URL must be defined`);
+    return;
+  }
+
+  if (!rawUrl.startsWith('{{protocol}}://{{host}}:{{rpc_port}}/rest/')) {
+    errors.push(`${requestPath}: REST request URL must use protocol/host/rpc_port variables and /rest/ path`);
+  }
+
+  const pathPart = rawUrl.split('?')[0];
+  if (!pathPart.endsWith('.json')) {
+    errors.push(`${requestPath}: REST request must use JSON format (.json)`);
+  }
+
+  for (const pattern of forbiddenRestPathPatterns) {
+    if (pattern.test(rawUrl)) {
+      errors.push(`${requestPath}: REST endpoint is outside the Phase 4 no-wallet/no-transaction scope: ${rawUrl}`);
+    }
+  }
+}
+
 function validateNoObviousSecrets() {
   for (const file of filesToSecretScan) {
     const full = path.join(root, file);
@@ -242,13 +291,32 @@ if (collection) {
   }
 }
 
+
+const restCollection = readJson('collections/bitcoin-core-rest.postman_collection.json');
+if (restCollection) {
+  if (restCollection.info?.schema !== 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json') {
+    errors.push('REST collection must use Postman Collection schema v2.1.0');
+  }
+  if (!Array.isArray(restCollection.item) || restCollection.item.length === 0) {
+    errors.push('REST collection must contain at least one folder/request');
+  }
+
+  const restRequests = collectRequests(restCollection.item);
+  if (restRequests.length === 0) {
+    errors.push('REST collection must contain at least one request');
+  }
+  for (const request of restRequests) {
+    validateRestRequest(request.item, request.path);
+  }
+}
+
 const environment = readJson('environments/regtest.postman_environment.json');
 if (environment) {
   if (!Array.isArray(environment.values)) {
     errors.push('Regtest environment must contain a values array');
   } else {
     const names = new Map(environment.values.map((value) => [value.key, value]));
-    for (const key of ['protocol', 'host', 'rpc_port', 'rpc_user', 'rpc_password']) {
+    for (const key of ['protocol', 'host', 'rpc_port', 'rpc_user', 'rpc_password', 'rest_block_height', 'rest_block_hash', 'rest_headers_count']) {
       if (!names.has(key)) errors.push(`Regtest environment missing variable: ${key}`);
     }
 
