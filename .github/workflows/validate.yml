@@ -31,3 +31,23 @@ jobs:
 
       - name: Audit production dependencies
         run: npm audit --omit=dev
+
+      - name: Check shell scripts
+        run: |
+          sh -n scripts/wait-for-bitcoind.sh
+          sh -n scripts/bootstrap-regtest-readonly.sh
+
+      - name: Validate Docker Compose config
+        run: docker compose config --quiet
+
+      - name: Start Bitcoin Core regtest node
+        run: docker compose up -d bitcoind
+
+      - name: Run Bitcoin Core regtest smoke checks
+        run: |
+          ./scripts/wait-for-bitcoind.sh
+          ./scripts/bootstrap-regtest-readonly.sh
+
+      - name: Stop Bitcoin Core regtest node
+        if: always()
+        run: docker compose down -v

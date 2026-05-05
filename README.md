@@ -2,7 +2,7 @@
 
 A curated Postman workspace for exploring and testing Bitcoin Core's JSON-RPC interface, built with a `regtest`-first workflow and CI validation.
 
-> Status: Phase 2 read-only Newman. The repository now contains a small, safe JSON-RPC collection and local Newman wiring for running it against an existing Bitcoin Core RPC endpoint.
+> Status: Phase 3 regtest integration. The repository contains a safe read-only JSON-RPC collection, Newman wiring, and a disposable Dockerized Bitcoin Core regtest node for read-only RPC readiness checks. Wallet and send-money workflows stay out of the default path.
 
 ## Goals
 
@@ -20,7 +20,8 @@ collections/      Postman collections
 environments/    Postman environment templates
   regtest.postman_environment.json
 docs/            Analysis, security notes, phase plan, API notes
-scripts/         Local validation and future test helpers
+scripts/         Local validation and regtest readiness helpers
+docker/          Bitcoin Core regtest configuration
 .github/         GitHub Actions workflows
 ```
 
@@ -38,6 +39,16 @@ Run static repository validation:
 npm run validate
 ```
 
+## Local regtest node
+
+```bash
+docker compose up -d bitcoind
+./scripts/wait-for-bitcoind.sh
+./scripts/bootstrap-regtest-readonly.sh
+```
+
+See [docs/regtest-docker.md](docs/regtest-docker.md) for reset instructions and the safety boundaries for any future block generation.
+
 The current pipeline validates:
 
 - JSON syntax for collections and environments
@@ -51,11 +62,12 @@ The current pipeline validates:
 - no obvious hardcoded RPC credentials
 - Newman dependency and `test:newman` script wiring
 - per-request Newman tests for HTTP 200, matching JSON-RPC id, and `error: null`
-
+- Docker regtest integration files and read-only helper scripts
+- Docker Compose config and read-only regtest smoke checks in CI
 
 ## Newman read-only RPC run
 
-`test:newman` runs the collection against the configured environment. It does not start Bitcoin Core and does not provision Docker/regtest; Phase 3 will cover reproducible regtest infrastructure.
+`test:newman` runs the collection against the configured environment. It does not provision Docker/regtest by itself; use the local regtest node commands above when you want a disposable Bitcoin Core RPC endpoint.
 
 Default target: `http://127.0.0.1:18443/` with the placeholder `bitcoin` / `bitcoin` RPC credentials from `environments/regtest.postman_environment.json`. Override values at runtime for an already-running `bitcoind`:
 
@@ -85,7 +97,6 @@ Primary planning source:
 - Bitcoin developer RPC reference: <https://developer.bitcoin.org/reference/rpc/>
 
 Additional implementation references will be used phase-by-phase, especially current Bitcoin Core documentation for REST, ZMQ, and version-specific RPC changes.
-
 
 ## Known Phase 2 dev dependency audit note
 

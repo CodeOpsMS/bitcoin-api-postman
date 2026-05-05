@@ -8,7 +8,12 @@ const requiredFiles = [
   'docs/analysis-and-plan.md',
   'docs/security.md',
   'collections/bitcoin-core-rpc.postman_collection.json',
-  'environments/regtest.postman_environment.json'
+  'environments/regtest.postman_environment.json',
+  'docker-compose.yml',
+  'docker/bitcoin.conf',
+  'docs/regtest-docker.md',
+  'scripts/wait-for-bitcoind.sh',
+  'scripts/bootstrap-regtest-readonly.sh'
 ];
 const filesToSecretScan = [
   ...requiredFiles,
@@ -163,6 +168,43 @@ function validatePackage() {
   }
 }
 
+function validatePhase3RegtestIntegration() {
+  const compose = readText('docker-compose.yml');
+  for (const requiredText of [
+    'bitcoind:',
+    'bitcoin/bitcoin:',
+    '127.0.0.1:18443:18443',
+    './docker/bitcoin.conf:/etc/bitcoin/bitcoin.conf:ro',
+    'healthcheck:'
+  ]) {
+    if (!compose.includes(requiredText)) {
+      errors.push(`docker-compose.yml: missing expected regtest compose marker: ${requiredText}`);
+    }
+  }
+
+  const bitcoinConf = readText('docker/bitcoin.conf');
+  for (const requiredText of ['regtest=1', 'server=1', 'rest=1', 'rpcauth=', 'rpcport=18443']) {
+    if (!bitcoinConf.includes(requiredText)) {
+      errors.push(`docker/bitcoin.conf: missing expected Bitcoin Core regtest setting: ${requiredText}`);
+    }
+  }
+  if (/rpcpassword\s*=/i.test(bitcoinConf) || /rpcuser\s*=/i.test(bitcoinConf)) {
+    errors.push('docker/bitcoin.conf: use rpcauth instead of rpcuser/rpcpassword entries');
+  }
+
+  const waitScript = readText('scripts/wait-for-bitcoind.sh');
+  if (!waitScript.includes('getblockchaininfo') || !waitScript.includes('TIMEOUT_SECONDS')) {
+    errors.push('scripts/wait-for-bitcoind.sh: must wait on read-only getblockchaininfo with a timeout');
+  }
+
+  const bootstrapScript = readText('scripts/bootstrap-regtest-readonly.sh');
+  for (const forbiddenMethod of ['sendtoaddress', 'walletpassphrase', 'dumpprivkey']) {
+    if (bootstrapScript.includes(forbiddenMethod)) {
+      errors.push(`scripts/bootstrap-regtest-readonly.sh: forbidden wallet/send-money method: ${forbiddenMethod}`);
+    }
+  }
+}
+
 function validateNoObviousSecrets() {
   for (const file of filesToSecretScan) {
     const full = path.join(root, file);
@@ -226,6 +268,7 @@ if (environment) {
   }
 }
 
+validatePhase3RegtestIntegration();
 validateNoObviousSecrets();
 validatePackage();
 

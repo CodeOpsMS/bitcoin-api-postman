@@ -1,0 +1,18 @@
+services:
+  bitcoind:
+    image: bitcoin/bitcoin:28.1
+    command: ["bitcoind", "-conf=/etc/bitcoin/bitcoin.conf", "-datadir=/home/bitcoin/.bitcoin"]
+    ports:
+      - "127.0.0.1:18443:18443"
+    volumes:
+      - bitcoin-regtest-data:/home/bitcoin/.bitcoin
+      - ./docker/bitcoin.conf:/etc/bitcoin/bitcoin.conf:ro
+    healthcheck:
+      test: ["CMD", "bitcoin-cli", "-conf=/etc/bitcoin/bitcoin.conf", "-datadir=/home/bitcoin/.bitcoin", "-regtest", "getblockchaininfo"]
+      interval: 5s
+      timeout: 3s
+      retries: 24
+      start_period: 5s
+
+volumes:
+  bitcoin-regtest-data:
